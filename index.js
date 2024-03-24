@@ -3,7 +3,7 @@
 /*              IS TAKIP UYGULAMASI EXPRESSJS             */
 /* ====================================================== */
 const express = require("express");
-const mongoose = require("mongoose");
+const {mongoose} = require("./models/user");
 const app = express();
 
 require('dotenv').config();
