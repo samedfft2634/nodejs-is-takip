@@ -21,7 +21,15 @@ const userSchema = new mongoose.Schema({
     timestamps:true
 })
 
+userSchema.post('save',function(doc,next){
+    console.log('kaydediltikten sonra calisacak',doc)
+    next()
+})
 
+userSchema.pre('save',function(next){
+    console.log("kaydedilmeden once calisacak!!!",this)
+    next()
+})
 
 module.exports={
     mongoose,

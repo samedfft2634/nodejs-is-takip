@@ -2,6 +2,18 @@
 const { User } = require("../models/user");
 
 const hataYakala = (err)=>{
+
+	let errors = {email:"",password:""}
+	if(err.code === 11000){
+		errors.email = "Bu mail adresi veritabaninda bulunuyor!";
+		return errors;
+	}
+	if(err.message.includes('user validation failed')){
+		Object.values(err.errors).forEach(({properties})=>{
+			errors[properties.path]=properties.message;
+		})
+		return errors;
+	}
  console.log(err.message,err.code)       
 }
 
@@ -22,8 +34,9 @@ module.exports = {
 			res.status(201).send({ user });
 		} catch (error) {
 			// res.status(400).send("Hata olustu! Kullanıcı oluşmadı." + error);
+			const errors = hataYakala(error)
             res.status(400).send({
-                message: hataYakala(error)
+                message: errors
             })
 		}
 	},

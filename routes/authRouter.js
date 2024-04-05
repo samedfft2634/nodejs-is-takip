@@ -1,16 +1,13 @@
 'use strict'
 const router = require('express').Router()
-const authController = require('../controllers/authController')
-
-// router.get('/signup',authController.getSignUp)
-// router.get('/signup',authController.postSignUp)
+const {getSignUp,signup_post,getLogIn,postLogIn} = require('../controllers/authController')
 
 router.route('/signup')
-.get(authController.getSignUp)
-.post(authController.signup_post)
+.get(getSignUp)
+.post(signup_post)
 
 router.route('/login')
-.get(authController.getLogIn)
-.post(authController.postLogIn)
+.get(getLogIn)
+.post(postLogIn)
 
 module.exports = router;
