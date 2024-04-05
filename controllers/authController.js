@@ -1,5 +1,6 @@
 "use strict";
 const { User } = require("../models/user");
+const jwt = require('jsonwebtoken')
 
 const hataYakala = (err)=>{
 
@@ -17,6 +18,12 @@ const hataYakala = (err)=>{
  console.log(err.message,err.code)       
 }
 
+const maxAge=3*24*60*60*1000
+
+const createToken=(id)=>{
+	return jwt.sign({id},process.env.SECRET_KEY,{expiresIn:maxAge})
+}
+
 module.exports = {
 	getSignUp: (req, res) => {
 		res.render("signup");
@@ -30,6 +37,8 @@ module.exports = {
 		const { email, password } = req.body;
 		try {
 			const user = await User.create({ email, password });
+			const token = createToken(user._id);
+			res.cookie('jwt',token,{httpOnly:true,maxAge})
 			console.log(email, password);
 			res.status(201).send({ user });
 		} catch (error) {
