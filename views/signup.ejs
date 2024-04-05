@@ -26,10 +26,18 @@
 
 <script>
 	const form = document.querySelector("form");
-    form.addEventListener('submit',(e)=>{
+    form.addEventListener('submit',async (e)=>{
         e.preventDefault();
         const email = form.email.value
         const password = form.password.value
-        
+        try {
+			const rest = await fetch('/signup',{
+				method:'POST',
+				body:JSON.stringify({email,password}),
+				headers:{'Content-Type':'applicaton/json'},
+			})
+		} catch (error) {
+			console.log(error);
+		}
     })
 </script>
