@@ -1,3 +1,35 @@
 <%- include('partials/header') %>
-<h1>Login</h1>
+
+<form action="/login">
+	<h2>Kullanıcı Girişi</h2>
+	<label for="email">Email</label>
+	<input
+		type="text"
+		name="email"
+		required
+		placeholder="Emailinizi giriniz!"
+	/>
+	<div class="email error"></div>
+
+	<label for="password">Parola</label>
+	<input
+		type="password"
+		name="password"
+		required
+		placeholder="Parolanızı giriniz!"
+	/>
+	<div class="password error"></div>
+
+	<button type="submit">Giriş Yap</button>
+</form>
 <%- include('partials/footer') %>
+
+<script>
+	const form = document.querySelector("form");
+    form.addEventListener('submit',(e)=>{
+        e.preventDefault();
+        const email = form.email.value
+        const password = form.password.value
+        
+    })
+</script>
