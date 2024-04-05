@@ -1,6 +1,7 @@
 "use strict";
 const { User } = require("../models/user");
 const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt')
 
 const hataYakala = (err)=>{
 
@@ -16,6 +17,12 @@ const hataYakala = (err)=>{
 		return errors;
 	}
  console.log(err.message,err.code)       
+}
+
+const encryptPassword = async(password)=>{
+	const salt = await bcrypt.genSalt();
+	password = await bcrypt.hash(password, salt)
+	return password
 }
 
 const maxAge=3*24*60*60*1000
@@ -52,7 +59,21 @@ module.exports = {
 
 	postLogIn: async (req, res) => {
 		const { email, password } = req.body;
-		console.log(email, password);
+		if(email && password){
+			const user = await User.findOne({email})
+			if(user && user.password ){
+				req.session.id = user.id;
+				req.session.password = user.password
+				res.send("Logged In")
+				console.log("Logged in Successfully!")
+			} else{
+				res.status = 401;
+				throw new Error("Login parameters are not true.");
+			}
+		} else {
+			res.status = 401;
+			throw new Error("Email and password are required.");
+		}
 		res.send("Kullanıcı girişi başarılı!");
 	},
 };
