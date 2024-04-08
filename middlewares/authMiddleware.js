@@ -1,7 +1,7 @@
 'use strict'
 /* ________________ Auth Middleware ________________ */
 const jwtoken = require('jsonwebtoken')
-const User = require('../models/user')
+
 
 module.exports = {
     authToken : (req,res,next)=>{
@@ -21,25 +21,6 @@ module.exports = {
             res.redirect('/login')
         }
     },
-
-    controlUser:(req,res,next)=>{
-        const token = req.cookies.jwt
-        if(token){
-            jwtoken.verify(token,process.env.SECRET_KEY,async(err,result)=>{
-                if(err){
-                    res.locals.user = null;
-                    next();
-                } else {
-                    let user = await User.findById(result.id);
-                    res.locals.user = user;
-                    next();
-                }
-            })
-        } else {
-            res.locals.user = null;
-            next();
-        }
-    }
 }
 
 
