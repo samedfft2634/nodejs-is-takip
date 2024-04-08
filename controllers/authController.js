@@ -1,7 +1,6 @@
 "use strict";
 const { User } = require("../models/user");
 const jwt = require('jsonwebtoken')
-const bcrypt = require('bcrypt')
 
 const hataYakala = (err)=>{
 
@@ -10,7 +9,7 @@ const hataYakala = (err)=>{
 		errors.email = "Bu mail adresi veritabaninda bulunuyor!";
 		return errors;
 	}
-	if(err.message.includes('user validation failed')){
+	if(err.message.includes('User validation failed')){
 		Object.values(err.errors).forEach(({properties})=>{
 			errors[properties.path]=properties.message;
 		})
@@ -19,14 +18,8 @@ const hataYakala = (err)=>{
  console.log(err.message,err.code)       
 }
 
-const encryptPassword = async(password)=>{
-	const salt = await bcrypt.genSalt();
-	password = await bcrypt.hash(password, salt)
-	return password
-}
 
 const maxAge=3*24*60*60*1000
-
 const createToken=(id)=>{
 	return jwt.sign({id},process.env.SECRET_KEY,{expiresIn:maxAge})
 }
@@ -47,13 +40,11 @@ module.exports = {
 			const token = createToken(user._id);
 			res.cookie('jwt',token,{httpOnly:true,maxAge})
 			console.log(email, password);
-			res.status(201).send({ user });
+			res.status(201).json(user);
 		} catch (error) {
 			// res.status(400).send("Hata olustu! Kullanıcı oluşmadı." + error);
 			const errors = hataYakala(error)
-            res.status(400).send({
-                message: errors
-            })
+            res.status(400).json({errors})
 		}
 	},
 
@@ -64,7 +55,7 @@ module.exports = {
 			if(user && user.password ){
 				req.session.id = user.id;
 				req.session.password = user.password
-				res.send("Logged In")
+				res.send("Kullanıcı girişi başarılı!");
 				console.log("Logged in Successfully!")
 			} else{
 				res.status = 401;
@@ -74,6 +65,6 @@ module.exports = {
 			res.status = 401;
 			throw new Error("Email and password are required.");
 		}
-		res.send("Kullanıcı girişi başarılı!");
+	
 	},
 };
