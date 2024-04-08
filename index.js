@@ -15,7 +15,7 @@ app.use(express.static("public"));
 app.use(express.json());
 app.use(cookieParser());
 app.use(require("cookie-session")({ secret: process.env.SECRET_KEY,maxAge: 1_000 * 60 * 60 * 24 * 3 }));
-const {authToken} = require('./middlewares/authMiddleware')
+const {authToken,controlUser} = require('./middlewares/authMiddleware')
 
 
 const userControl = async (req, res, next) => {
@@ -48,6 +48,7 @@ mongoose
 	)
 	.catch((err) => console.log(err));
 
+app.get('*',controlUser)
 app.get("/",authToken, (req, res) => res.render("home"));
 app.get("/works",authToken, (req, res) => res.render("works"));
 

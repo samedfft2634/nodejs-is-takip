@@ -65,4 +65,9 @@ module.exports = {
 			res.status(400).json({ errors });
 		}
 	},
+
+	getLogout:async(req,res)=>{
+		res.cookie('jwt','çıkış yapıldı',{maxAge:1})
+		res.redirect('/')
+	}
 };
