@@ -6,12 +6,17 @@ const express = require("express");
 const { mongoose } = require("./models/user");
 const app = express();
 const {User} = require('./models/user')
+const cookieParser = require('cookie-parser');
+
 
 require("dotenv").config();
 
 app.use(express.static("public"));
 app.use(express.json());
+app.use(cookieParser());
 app.use(require("cookie-session")({ secret: process.env.SECRET_KEY,maxAge: 1_000 * 60 * 60 * 24 * 3 }));
+const {authToken} = require('./middlewares/authMiddleware')
+
 
 const userControl = async (req, res, next) => {
 	if (req?.session?.id) {
@@ -43,8 +48,8 @@ mongoose
 	)
 	.catch((err) => console.log(err));
 
-app.get("/", (req, res) => res.render("home"));
-app.get("/works", (req, res) => res.render("works"));
+app.get("/",authToken, (req, res) => res.render("home"));
+app.get("/works",authToken, (req, res) => res.render("works"));
 
 /* =================================================== */
 // Routes

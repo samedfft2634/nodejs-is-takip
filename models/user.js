@@ -40,6 +40,25 @@ userSchema.pre("save", async function (next) {
 	next();
 });
 
+userSchema.statics.login = async function(email, password) {
+    const User = this; 
+
+    try {
+        const user = await User.findOne({ email });
+        if (user) {
+            const auth = await bcrypt.compare(password, user.password);
+            if (auth) {
+                return user;
+            }
+            throw new Error('Password Error');
+        } else {
+            throw new Error('Email Error');
+        }
+    } catch (error) {
+        throw new Error(error.message);
+    }
+};
+
 module.exports = {
     mongoose,
     User: mongoose.model("User", userSchema),
