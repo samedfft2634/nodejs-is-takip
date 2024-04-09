@@ -2,10 +2,9 @@
 /* ________________ Auth Middleware ________________ */
 const jwtoken = require('jsonwebtoken')
 
-
 module.exports = {
     authToken : (req,res,next)=>{
-        console.log(req.cookies)
+        // console.log(req.cookies)
         const token = req.cookies.jwt
         if(token){
             jwtoken.verify(token,process.env.SECRET_KEY,(err,result)=>{

@@ -43,7 +43,7 @@ module.exports = {
 			const user = await User.create({ email, password });
 			const token = createToken(user._id);
 			res.cookie("jwt", token, { httpOnly: true, maxAge });
-			console.log(email, password);
+			// console.log(email, password);
 			res.status(201).json(user);
 		} catch (error) {
 			// res.status(400).send("Hata olustu! Kullanıcı oluşmadı." + error);

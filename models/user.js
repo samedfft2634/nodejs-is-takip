@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.post("save", function (doc, next) {
-	console.log("kaydediltikten sonra calisacak", doc);
+	// console.log("kaydediltikten sonra calisacak", doc);
 	next();
 });
 
