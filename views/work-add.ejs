@@ -3,17 +3,50 @@
 <form action="/work-add">
 	<h2>İş Oluştur</h2>
 	<label for="title">Başlık</label>
-	<input	type="text"	name="title" required placeholder="Başlık giriniz!"	/>
+	<input type="text" name="title" required placeholder="Başlık giriniz!" />
 
 	<label for="description">Açıklama</label>
-	<input	type="password"	name="description"	required placeholder="Açıklama giriniz!"/>
-	
-    <label for="start">Başlama Tarihi</label>
-    <input type="date" name="start" required>
-    
-    <label for="end">Bitiş Tarihi</label>
-    <input type="date" name="end" required>
+	<input
+		type="text"
+		name="description"
+		required
+		placeholder="Açıklama giriniz!"
+	/>
+
+	<label for="startDate">Başlama Tarihi</label>
+	<input type="date" name="startDate" required />
+
+	<label for="endDate">Bitiş Tarihi</label>
+	<input type="date" name="endDate" required />
 
 	<button type="submit">Oluştur</button>
 </form>
 <%- include('partials/footer') %>
+
+<script>
+	const form = document.querySelector("form");
+
+	form.addEventListener("submit", async (e) => {
+		e.preventDefault();
+
+		const title = form.title.value;
+		const description = form.description.value;
+		const startDate = form.startDate.value;
+		const endDate = form.endDate.value;
+
+		try {
+			const res = await fetch("/work-add", {
+				method: "POST",
+				body: JSON.stringify({title,description,startDate,endDate}),
+				headers: { "Content-Type": "application/json" },
+			});
+			const data = await res.json();
+			console.log(data);
+			if (data.work) {
+				location.assign("/works");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	});
+</script>

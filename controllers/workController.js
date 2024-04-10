@@ -8,17 +8,22 @@ module.exports.work_add_get = (req,res) => {
 
 module.exports.work_add_post = async(req,res)=>{
 	const {title,description,startDate,endDate} = req.body
-	try {
-		const work = await Work.create({
+
+	try {	
+		const newWork = await Work.create({
 			title,
 			description,
 			startDate:new Date(startDate),
-			endDate:new Date(endDate),
-			userId:res.locals.user._id,	
+			endDate:new Date(endDate)
 		})
-		res.status(201).json({work:work._id})
+		
+        const work = await newWork.save();
+        console.log("Work created successfully:", work);
+        res.status(201).json({ work });
 	} catch (error) {
-		res.status(400).json({error})
+		console.error("Error creating work:", error);
+        res.status(400).json({ error: "Bad request" })
+    
 	}
 }
 

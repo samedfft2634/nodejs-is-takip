@@ -3,6 +3,14 @@
 const {mongoose} = require('../models/user')
 
 const WorkSchema = new mongoose.Schema({
+
+    userId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User',
+        index:true,
+        unique:true, 
+    },
+
     title:{
         type:String,
         trim:true,
@@ -14,8 +22,6 @@ const WorkSchema = new mongoose.Schema({
     startDate:Date,
 
     endDate:Date,
-
-    userId:String,
 
 },{
     collection:"works",
