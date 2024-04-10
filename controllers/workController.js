@@ -10,11 +10,13 @@ module.exports.work_add_post = async(req,res)=>{
 	const {title,description,startDate,endDate} = req.body
 
 	try {	
+		console.log(res.locals)
 		const newWork = await Work.create({
 			title,
 			description,
 			startDate:new Date(startDate),
-			endDate:new Date(endDate)
+			endDate:new Date(endDate),
+			userId:res.locals.user._id
 		})
 		
         const work = await newWork.save();
@@ -25,5 +27,11 @@ module.exports.work_add_post = async(req,res)=>{
         res.status(400).json({ error: "Bad request" })
     
 	}
+}
+
+module.exports.works_get = async(req,res)=>{
+	const works = Work.find({'userId':res.locals.user._id}).then((result)=>{
+		res.render('works',{works:result})
+	})
 }
 
